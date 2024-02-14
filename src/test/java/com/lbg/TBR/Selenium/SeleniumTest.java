@@ -154,7 +154,6 @@ public class SeleniumTest {
 	void testEditSelller() {
 		this.driver.get("http://localhost:3000/Sellers/Edit/1");
 		String firstName = "Bob";
-		
 		WebElement fname = this.driver.findElement(By.id("fn"));
 		fname.sendKeys(firstName);
 	    WebElement submit = this.driver.findElement(By.cssSelector("#root > header > div > form > button"));
@@ -169,11 +168,10 @@ public class SeleniumTest {
 		 
 		this.driver.get("http://localhost:3000/Sellers");
  
-		WebElement deleteButton = this.driver.findElement(By
-				.cssSelector("#root > header > div > div > div > div > div > div > div > div > button.btn.btn-danger"));
-		this.driver.executeScript("arguments[0].scrollIntoView(true);", deleteButton);
- 
+		WebElement deleteButton = this.driver.findElement(By.cssSelector("#root > header > div > div > div > div > div > div > div > div > button.btn.btn-danger"));
+//		this.driver.executeScript("arguments[0].scrollIntoView(true);", deleteButton);
 		deleteButton.click();
+		Assertions.assertTrue(deleteButton.isSelected());
  
 	}
 }
