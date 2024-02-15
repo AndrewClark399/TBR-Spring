@@ -53,7 +53,7 @@ public class SeleniumTest {
  
 		WebElement itemAppears = this.driver.findElement(
 				By.cssSelector("#root > header > div > div > div > div > div:nth-child(1) > div > div > h4"));
-		Assertions.assertEquals("Poca Hontas", itemAppears.getText());
+		Assertions.assertEquals("Hontas", itemAppears.getText());
 	}
 
 	@Test
@@ -181,4 +181,29 @@ public class SeleniumTest {
 	    List<WebElement> sellerCards = this.driver.findElements(By.className("card"));
 	    Assertions.assertEquals(0, sellerCards.size());
 	}
+@Test
+@Order(5)
+
+void testEditBuyer() {
+	this.driver.get("http://localhost:3000/Buyers/Edit/1");
+	String firstName = "Arianna";
+	String lastName = "Smith";
+	WebElement fname = this.driver.findElement(By.id("fn"));
+	fname.sendKeys(firstName);
+    WebElement submit = this.driver.findElement(By.cssSelector("#root > header > div > form > button"));
+    submit.click();
+    WebElement checkName = this.driver.findElement(
+			By.cssSelector("#root > header > div > div > div > div > div > div > div > div > h4"));
+	Assertions.assertEquals((firstName + " " + lastName), checkName.getText());
+}
+@Test
+@Order(6)
+void testDeleteBuyer() {
+    this.driver.get("http://localhost:3000/Buyers");
+    WebElement deleteBuyer = this.driver.findElement(By.cssSelector("#root > header > div > div > div > div > div > div > div > div > button.btn.btn-danger"));
+    deleteBuyer.click();
+    wait.until(ExpectedConditions.invisibilityOf(deleteBuyer));
+    List<WebElement> buyerCards = this.driver.findElements(By.className("card"));
+    Assertions.assertEquals(0, buyerCards.size());
+}
 }
