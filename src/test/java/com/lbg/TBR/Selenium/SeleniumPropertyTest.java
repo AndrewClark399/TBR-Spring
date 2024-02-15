@@ -74,4 +74,33 @@ public class SeleniumPropertyTest {
 
 	}
 
+	@Test
+	@Order(3)
+	void testCreateBookingsPropertiesForSale() {
+		this.driver.get("http://localhost:3000/PropertiesForSale/BookingSale/1");
+
+		String fullName = "Total Genius";
+		String email = "Rocking@theworld.com";
+		String phone = "0758493748";
+
+		WebElement name = this.driver.findElement(By.id("fn"));
+		name.sendKeys(fullName);
+
+		WebElement contactEmail = this.driver.findElement(By.id("ln"));
+		contactEmail.sendKeys(email);
+
+		WebElement mobile = this.driver.findElement(By.id("ad"));
+		mobile.sendKeys(phone);
+
+		WebElement dateBox = driver.findElement(By.xpath("//*[@id=\"pc\"]"));
+
+		dateBox.click();
+		dateBox.sendKeys("101024");
+
+		WebElement submit = this.driver
+				.findElement(By.cssSelector("#root > header > div > div > div.row > div:nth-child(1) > form > button"));
+		submit.click();
+
+	}
+
 }
