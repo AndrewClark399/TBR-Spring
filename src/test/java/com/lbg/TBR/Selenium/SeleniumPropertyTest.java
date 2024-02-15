@@ -2,6 +2,7 @@ package com.lbg.TBR.Selenium;
 
 import java.time.Duration;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -11,6 +12,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.jdbc.Sql;
@@ -29,55 +32,67 @@ public class SeleniumPropertyTest {
 	void init() {
 		this.driver = new ChromeDriver();
 		this.driver.manage().window().maximize();
-		this.driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+//		this.driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
 	}
+
+//	@Test
+//	@Order(1)
+//	void testGetPropertiesForSale() {
+//		this.driver.get("http://localhost:3000/PropertiesForSale");
+//
+//	}
+
+//	@Test
+//	@Order(2)
+//	void testCreatePropertiesForSale() {
+//		this.driver.get("http://localhost:3000/PropertiesForSale");
+//		int bathroom = 5;
+//		int bedroom = 3;
+//		Double price = 200000.00;
+//		String address = "123 Andrew Clark Close";
+//		String garden = "yes";
+//		String postcode = "AC1 1AC";
+//		String type = "";
+//
+//		WebElement bathroomNew = this.driver.findElement(By.id("bt"));
+//		bathroomNew.sendKeys("5");
+//
+//		WebElement bedroomNew = this.driver.findElement(By.id("bd"));
+//		bedroomNew.sendKeys("3");
+//
+//		WebElement priceNew = this.driver.findElement(By.id("pr"));
+//		priceNew.sendKeys("200000.00");
+//
+//		WebElement addressNew = this.driver.findElement(By.id("ad"));
+//		addressNew.sendKeys(address);
+//
+//		WebElement gardenNew = this.driver.findElement(By.id("gn"));
+//		gardenNew.sendKeys(garden);
+//
+//		WebElement postcodeNew = this.driver.findElement(By.id("pc"));
+//		postcodeNew.sendKeys(postcode);
+//
+//		WebElement typeNew = this.driver.findElement(By.id("ty"));
+//		typeNew.click();
+//	}
 
 	@Test
 	@Order(1)
-	void testGetPropertiesForSale() {
+	void testGetBookingsPropertiesForSale() {
 		this.driver.get("http://localhost:3000/PropertiesForSale");
+
+		WebElement bookViewing = this.driver.findElement(By.cssSelector(
+				"#root > header > div > div.container-fluid > div > div > div > div > button:nth-child(17)"));
+		this.driver.executeScript("arguments[0].scrollIntoView(true);", bookViewing);
+		bookViewing.click();
 
 	}
 
 	@Test
 	@Order(2)
-	void testCreatePropertiesForSale() {
-		this.driver.get("http://localhost:3000/PropertiesForSale");
-		int bathroom = 5;
-		int bedroom = 3;
-		Double price = 200000.00;
-		String address = "123 Andrew Clark Close";
-		String garden = "yes";
-		String postcode = "AC1 1AC";
-		String type = "";
-
-		WebElement bathroomNew = this.driver.findElement(By.id("bt"));
-		bathroomNew.sendKeys("5");
-
-		WebElement bedroomNew = this.driver.findElement(By.id("bd"));
-		bedroomNew.sendKeys("3");
-
-		WebElement priceNew = this.driver.findElement(By.id("pr"));
-		priceNew.sendKeys("200000.00");
-
-		WebElement addressNew = this.driver.findElement(By.id("ad"));
-		addressNew.sendKeys(address);
-
-		WebElement gardenNew = this.driver.findElement(By.id("gn"));
-		gardenNew.sendKeys(garden);
-
-		WebElement postcodeNew = this.driver.findElement(By.id("pc"));
-		postcodeNew.sendKeys(postcode);
-
-		WebElement typeNew = this.driver.findElement(By.id("ty"));
-		typeNew.click();
-
-	}
-
-	@Test
-	@Order(3)
 	void testCreateBookingsPropertiesForSale() {
 		this.driver.get("http://localhost:3000/PropertiesForSale/BookingSale/1");
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
 		String fullName = "Total Genius";
 		String email = "Rocking@theworld.com";
@@ -94,12 +109,21 @@ public class SeleniumPropertyTest {
 
 		WebElement dateBox = driver.findElement(By.xpath("//*[@id=\"pc\"]"));
 
-		dateBox.click();
-		dateBox.sendKeys("101024");
+		dateBox.sendKeys("10102024");
+
+		WebElement timePick = this.driver
+				.findElement(By.cssSelector("#root > header > div > div > div.row > div:nth-child(1) > form > select"));
+
+		timePick.sendKeys("11:00-12:00");
 
 		WebElement submit = this.driver
 				.findElement(By.cssSelector("#root > header > div > div > div.row > div:nth-child(1) > form > button"));
+		this.driver.executeScript("arguments[0].scrollIntoView(true);", submit);
 		submit.click();
+
+		WebElement checkBooking = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(
+				"#root > header > div > div > div.card > table > tbody > tr:nth-child(2) > td:nth-child(2)")));
+		Assertions.assertEquals((email), checkBooking.getText());
 
 	}
 
