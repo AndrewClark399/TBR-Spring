@@ -2,6 +2,7 @@ package com.lbg.TBR.Selenium;
 
 import java.time.Duration;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -43,13 +44,12 @@ public class SeleniumPropertyTest {
 	@Order(2)
 	void testCreatePropertiesForSale() {
 		this.driver.get("http://localhost:3000/PropertiesForSale");
-		int bathroom = 5;
-		int bedroom = 3;
+
 		Double price = 200000.00;
 		String address = "123 Andrew Clark Close";
 		String garden = "yes";
+		String type = "flat";
 		String postcode = "AC1 1AC";
-		String type = "";
 
 		WebElement bathroomNew = this.driver.findElement(By.id("bt"));
 		bathroomNew.sendKeys("5");
@@ -66,11 +66,18 @@ public class SeleniumPropertyTest {
 		WebElement gardenNew = this.driver.findElement(By.id("gn"));
 		gardenNew.sendKeys(garden);
 
+		WebElement typeNew = this.driver.findElement(By.id("ty"));
+		typeNew.sendKeys(type);
+
 		WebElement postcodeNew = this.driver.findElement(By.id("pc"));
 		postcodeNew.sendKeys(postcode);
 
-		WebElement typeNew = this.driver.findElement(By.id("ty"));
-		typeNew.click();
+		WebElement submitP = this.driver.findElement(By.id("submitProperty"));
+		submitP.submit();
+
+		WebElement checkProperty = this.driver.findElement(By.cssSelector(
+				"#root > header > div > div.container-fluid > div > div:nth-child(2) > div > div > p:nth-child(14)"));
+		Assertions.assertEquals(("Address: " + address), checkProperty.getText());
 
 	}
 
