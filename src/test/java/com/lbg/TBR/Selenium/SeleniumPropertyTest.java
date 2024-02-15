@@ -74,4 +74,14 @@ public class SeleniumPropertyTest {
 
 	}
 
+//	@Test
+//	@Order(3)
+//	void testDeletePropertiesForSale() {
+//		this.driver.get("http://localhost:3000/PropertiesForSale");
+//
+//		WebElement DeletePropertyForSale = this.driver
+//				.findElement(By.cssSelector("#root > header > div > div:nth-child(1) > form > h1"));
+//		this.driver.executeScript("arguments[0].scrollIntoView(true);", DeletePropertyForSale);
+//		DeletePropertyForSale.click();
+
 }
