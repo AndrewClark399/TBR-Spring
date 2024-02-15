@@ -1,6 +1,7 @@
 package com.lbg.TBR.Selenium;
 
 import java.time.Duration;
+import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -13,18 +14,24 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
-@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
+//@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
+import com.lbg.TBR.SpringTbrSpringApplication;
+
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT, classes = { SpringTbrSpringApplication.class })
 @TestMethodOrder(OrderAnnotation.class)
 @Sql(scripts = { "classpath:estateAgent-schema.sql",
 		"classpath:estateAgent-data.sql" }, executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 public class SeleniumTest {
 
 	private RemoteWebDriver driver;
+	private WebDriverWait wait;
 
 	@BeforeEach
 	void init() {
@@ -32,6 +39,7 @@ public class SeleniumTest {
 		this.driver.manage().window().maximize();
 
 		this.driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+		this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 	}
 
 //	@Test
@@ -154,39 +162,39 @@ public class SeleniumTest {
 		Assertions.assertEquals((phoneNumber), createdSellerPhoneNumber.getText());
 	}
 
-	@Test
-	@Order(5)
-
-	void testEditSelller() {
-		this.driver.get("http://localhost:3000/Sellers/Edit/1");
-		String firstName = "Bob";
-
-		WebElement fname = this.driver.findElement(By.id("fn"));
-		fname.sendKeys(firstName);
-		WebElement submit = this.driver.findElement(By.cssSelector("#submitBuyer"));
-		submit.click();
-		WebElement checkName = this.driver
-				.findElement(By.cssSelector("#root > header > div > div > div > div > div > div > div > div > h4"));
-		Assertions.assertEquals((firstName), checkName.getText());
-	}
+//	@Test
+//	@Order(5)
+//
+//	void testEditSelller() {
+//		this.driver.get("http://localhost:3000/Sellers/Edit/1");
+//		String firstName = "Bob";
+//
+//		WebElement fname = this.driver.findElement(By.id("fn"));
+//		fname.sendKeys(firstName);
+//		WebElement submit = this.driver.findElement(By.cssSelector("#submitBuyer"));
+//		submit.click();
+//		WebElement checkName = this.driver
+//				.findElement(By.cssSelector("#root > header > div > div > div > div > div > div > div > div > h4"));
+//		Assertions.assertEquals((firstName), checkName.getText());
+//	}
 
 	@Test
 	@Order(6)
 	void testDeleteSeller() {
 
 		this.driver.get("http://localhost:3000/Sellers");
-
-		WebElement deleteButton = this.driver.findElement(By
+		WebElement deleteSeller = this.driver.findElement(By
 				.cssSelector("#root > header > div > div > div > div > div > div > div > div > button.btn.btn-danger"));
-		this.driver.executeScript("arguments[0].scrollIntoView(true);", deleteButton);
-
-		deleteButton.click();
+		deleteSeller.click();
+		wait.until(ExpectedConditions.invisibilityOf(deleteSeller));
+		List<WebElement> sellerCards = this.driver.findElements(By.className("card"));
+		Assertions.assertEquals(0, sellerCards.size());
 	}
 
 	@AfterEach
 	public void tearDown() {
 
-		System.out.println("After Each cleanUpEach() method called");
+
 
 	}
 

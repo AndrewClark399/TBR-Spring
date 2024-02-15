@@ -12,6 +12,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.jdbc.Sql;
@@ -79,6 +81,74 @@ public class SeleniumPropertyTest {
 				"#root > header > div > div.container-fluid > div > div:nth-child(2) > div > div > p:nth-child(14)"));
 		Assertions.assertEquals(("Address: " + address), checkProperty.getText());
 
+	}
+
+	@Test
+	@Order(4)
+	void testGetBookingsPropertiesForSale() {
+		this.driver.get("http://localhost:3000/PropertiesForSale");
+
+		WebElement bookViewing = this.driver.findElement(By.cssSelector(
+				"#root > header > div > div.container-fluid > div > div > div > div > button:nth-child(17)"));
+		this.driver.executeScript("arguments[0].scrollIntoView(true);", bookViewing);
+		bookViewing.click();
+
+	}
+
+	@Test
+	@Order(3)
+	void testCreateBookingsPropertiesForSale() {
+		this.driver.get("http://localhost:3000/PropertiesForSale/BookingSale/1");
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+		String fullName = "Total Genius";
+		String email = "Rocking@theworld.com";
+		String phone = "0758493748";
+
+		WebElement name = this.driver.findElement(By.id("fn"));
+		name.sendKeys(fullName);
+
+		WebElement contactEmail = this.driver.findElement(By.id("ln"));
+		contactEmail.sendKeys(email);
+
+		WebElement mobile = this.driver.findElement(By.id("ad"));
+		mobile.sendKeys(phone);
+
+		WebElement dateBox = driver.findElement(By.xpath("//*[@id=\"pc\"]"));
+
+		dateBox.sendKeys("10102024");
+
+		WebElement timePick = this.driver
+				.findElement(By.cssSelector("#root > header > div > div > div.row > div:nth-child(1) > form > select"));
+
+		timePick.sendKeys("11:00-12:00");
+
+		WebElement submit = this.driver
+				.findElement(By.cssSelector("#root > header > div > div > div.row > div:nth-child(1) > form > button"));
+		this.driver.executeScript("arguments[0].scrollIntoView(true);", submit);
+		submit.click();
+
+		WebElement checkBooking = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(
+				"#root > header > div > div > div.card > table > tbody > tr:nth-child(2) > td:nth-child(2)")));
+		Assertions.assertEquals((email), checkBooking.getText());
+
+	}
+
+	@Order(5)
+	void PropertyForSale() {
+		this.driver.get("http://localhost:3000/PropertiesForSale");
+
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+		WebElement Bathroom = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("bt")));
+		Bathroom.sendKeys("5");
+
+		WebElement bedroom = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("bd")));
+		bedroom.sendKeys("3");
+
+		Bathroom.getText();
+
+		driver.quit();
 	}
 
 }
